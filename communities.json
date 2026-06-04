@@ -1,0 +1,162 @@
+[
+  {
+    "name": "AI Innovation Club",
+    "category": "AI & Technology",
+    "description": "A student group passionate about machine learning, generative AI, and cutting-edge tech. We organize weekly hackathons, reading groups, and guest speaker sessions from top tech companies.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Build Professional Network", "Find Events", "Make Friends"],
+    "tags": ["AI & Technology", "Startups", "Coding", "Innovation"]
+  },
+  {
+    "name": "Language Exchange Café",
+    "category": "Language Exchange",
+    "description": "Weekly casual meetups at local cafés to practice languages. Perfect for international students wanting to learn German and local students wanting to practice other languages.",
+    "target_group_size": "Large",
+    "primary_goals": ["Practice German", "Make Friends", "Reduce Loneliness"],
+    "tags": ["Language Exchange", "German", "Coffee", "Intercultural"]
+  },
+  {
+    "name": "Campus Football (Soccer) League",
+    "category": "Sports",
+    "description": "Casual, mixed-gender football matches twice a week. We play on the university sports fields. All skill levels are welcome. Post-game drinks/socials are a regular event!",
+    "target_group_size": "Large",
+    "primary_goals": ["Make Friends", "Find Events", "Reduce Loneliness"],
+    "tags": ["Sports", "Outdoors", "Fitness", "Soccer"]
+  },
+  {
+    "name": "Weekly Board Game Night",
+    "category": "Gaming",
+    "description": "A cozy gathering for fans of modern board games, from Catan to complex strategy games. We meet every Friday evening, bring snacks, and play in a relaxed atmosphere.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Reduce Loneliness", "Find Events"],
+    "tags": ["Gaming", "Social", "Board Games", "Cozy"]
+  },
+  {
+    "name": "Alpine Hiking & Outdoor Club",
+    "category": "Hiking",
+    "description": "We organize weekend hiking trips to local trails and the Alps. Enjoy beautiful landscapes, clean air, and great conversations while climbing mountains.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Find Events", "Reduce Loneliness"],
+    "tags": ["Hiking", "Sports", "Nature", "Outdoors"]
+  },
+  {
+    "name": "Erasmus & International Meetup",
+    "category": "Volunteering",
+    "description": "The ultimate social club for Erasmus and international students. We host city tours, pub crawls, and cultural evenings to help you integrate quickly and make friends.",
+    "target_group_size": "Large",
+    "primary_goals": ["Make Friends", "Find Events", "Reduce Loneliness", "Practice German"],
+    "tags": ["Language Exchange", "Erasmus", "Social", "Party", "International"]
+  },
+  {
+    "name": "Student Startup Incubator Network",
+    "category": "Startups",
+    "description": "A community for aspiring entrepreneurs, designers, and developers. Meet co-founders, pitch ideas, attend pitch nights, and learn about the local startup ecosystem.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Build Professional Network", "Find Events", "Make Friends"],
+    "tags": ["Startups", "AI & Technology", "Business", "Networking"]
+  },
+  {
+    "name": "Global Cooking & Foodies Club",
+    "category": "Cooking",
+    "description": "Every week, a different member hosts a cooking workshop showing how to make traditional dishes from their home country. A tasty way to discover new cultures!",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Reduce Loneliness", "Cooking"],
+    "tags": ["Cooking", "Food", "Culture", "International"]
+  },
+  {
+    "name": "International Coffee Chit-Chat",
+    "category": "Language Exchange",
+    "description": "A relaxed morning meet-up where students get together, grab a cup of coffee or tea, and talk about everything and nothing. Super easy-going and welcoming.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Language Exchange", "Coffee", "Social", "International"]
+  },
+  {
+    "name": "Campus Beach Volleyball Club",
+    "category": "Sports",
+    "description": "Whether you're a beginner or an advanced player, join us on the sand courts for beach volleyball, music, and sun. We play all summer and move indoors in winter.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Find Events"],
+    "tags": ["Sports", "Volleyball", "Fitness", "Summer"]
+  },
+  {
+    "name": "Creative Writing & Book Club",
+    "category": "Reading",
+    "description": "For readers and writers alike. We discuss a book of the month and share our own poems, short stories, and essays. Perfect for a cozy evening of intellectual exchange.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Practice German", "Reduce Loneliness"],
+    "tags": ["Reading", "Literature", "Art", "Writing"]
+  },
+  {
+    "name": "Esports & Gaming League",
+    "category": "Gaming",
+    "description": "Our league hosts local and online tournaments for popular games like League of Legends, Valorant, Super Smash Bros, and Rocket League. We also stream our games on Twitch.",
+    "target_group_size": "Large",
+    "primary_goals": ["Make Friends", "Find Events"],
+    "tags": ["Gaming", "Esports", "Discord", "Technology"]
+  },
+  {
+    "name": "Eco-Students Volunteering Initiative",
+    "category": "Volunteering",
+    "description": "Join our local environmental volunteering program. We organize trash collection walks, tree planting sessions, and sustainability workshops around the city.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Practice German", "Build Professional Network"],
+    "tags": ["Volunteering", "Hiking", "Ecology", "Sustainability"]
+  },
+  {
+    "name": "Campus Jam Session Circle",
+    "category": "Music",
+    "description": "A group for musicians of all instruments and levels. We rent a rehearsal room weekly to jam, cover favorite songs, and occasionally prepare for campus open mic nights.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Find Events", "Reduce Loneliness"],
+    "tags": ["Music", "Jam", "Instruments", "Concerts"]
+  },
+  {
+    "name": "Maker Space & Robotics Lab",
+    "category": "AI & Technology",
+    "description": "A hands-on engineering club where we build robots, work with 3D printers, and code microcontrollers. Get help with your university projects or build your own ideas.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Build Professional Network", "Find Events"],
+    "tags": ["AI & Technology", "Coding", "Engineering", "Hardware"]
+  },
+  {
+    "name": "German Conversation Stammtisch",
+    "category": "Language Exchange",
+    "description": "The classic German pub gathering. Practice your conversational German in a cozy local beer garden or tavern. Open to all learning levels, from A1 to C2.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Practice German", "Make Friends"],
+    "tags": ["Language Exchange", "German", "Beer Garden", "Speaking"]
+  },
+  {
+    "name": "Early Bird Running Group",
+    "category": "Sports",
+    "description": "Start your day with energy! We meet at 7:00 AM on weekdays for a 5K or 8K run through the city park, followed by a quick breakfast together before lectures start.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Sports", "Running", "Fitness", "Morning"]
+  },
+  {
+    "name": "Bakers & Pastry Makers Circle",
+    "category": "Cooking",
+    "description": "Do you love baking cookies, sourdough bread, or french pastries? Join us in our baking session where we share recipes, tips, and of course, eat delicious pastries.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Cooking", "Food", "Baking", "Desserts"]
+  },
+  {
+    "name": "Social Impact Hub",
+    "category": "Volunteering",
+    "description": "We design social entrepreneurship projects to help refugees, senior citizens, and homeless people in our city. If you want to use your student skills for good, join us!",
+    "target_group_size": "Medium",
+    "primary_goals": ["Build Professional Network", "Find Events", "Make Friends"],
+    "tags": ["Volunteering", "Startups", "Social Impact", "Charity"]
+  },
+  {
+    "name": "Anime, Manga & Asian Culture Guild",
+    "category": "Gaming",
+    "description": "A fun, enthusiastic community centered around anime, manga, webtoons, and Asian pop culture. We host watch parties, manga discussions, and trip groups to local conventions.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Gaming", "Anime", "Manga", "Art", "Culture"]
+  }
+]
