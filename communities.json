@@ -158,5 +158,45 @@
     "target_group_size": "Medium",
     "primary_goals": ["Make Friends", "Reduce Loneliness"],
     "tags": ["Gaming", "Anime", "Manga", "Art", "Culture"]
+  },
+  {
+    "name": "TUM Math & CS Study Group",
+    "category": "Study Session",
+    "description": "A collaborative study group for mathematics and computer science students. We work through lecture sheets, prepare for exams, and discuss complex problem sets together.",
+    "target_group_size": "Small",
+    "primary_goals": ["Build Professional Network", "Make Friends", "Practice German"],
+    "tags": ["Study Session", "AI & Technology", "Coding", "Mathematics"]
+  },
+  {
+    "name": "Campus Gym & Fitness Buddies",
+    "category": "Sports",
+    "description": "Find gym partners, share workout routines, and stay motivated. We coordinate gym times and encourage healthy lifestyles during exam phases.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Sports", "Fitness", "Gym", "Motivation"]
+  },
+  {
+    "name": "Urban Photography Walkers",
+    "category": "Hiking",
+    "description": "For photography enthusiasts. We organize weekend photowalks through the city's historic districts, modern landmarks, and scenic parks to capture urban life.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Find Events"],
+    "tags": ["Hiking", "Photography", "Art", "Outdoors"]
+  },
+  {
+    "name": "Indie & Sci-Fi Film Club",
+    "category": "Gaming",
+    "description": "A club for cinema lovers. We organize weekly screenings of indie films, science-fiction classics, and foreign cinema, followed by discussions at a local pub.",
+    "target_group_size": "Medium",
+    "primary_goals": ["Make Friends", "Reduce Loneliness", "Find Events"],
+    "tags": ["Gaming", "Movies", "Cinema", "Social"]
+  },
+  {
+    "name": "Campus Fiction Book Club",
+    "category": "Reading",
+    "description": "We meet once a month to discuss contemporary novels, science-fiction masterpieces, and classic literature over tea and pastries. Friendly and informal debates.",
+    "target_group_size": "Small",
+    "primary_goals": ["Make Friends", "Reduce Loneliness"],
+    "tags": ["Reading", "Literature", "Books", "Cozy"]
   }
 ]

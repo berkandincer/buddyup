@@ -1,27 +1,35 @@
 # BuddyUp AI - Student Community Matching PoC
 
-### *Find your community. Build your network.*
+### *Find your people. Build your community.*
 
-BuddyUp AI is a Proof-of-Concept (PoC) web application developed as part of an Entrepreneurship curriculum. It demonstrates how Large Language Models (LLMs) and intelligent retrieval mechanisms can help university students integrate into new cities, combat isolation, and discover local communities.
+BuddyUp AI is an AI-powered student matching platform developed as a Proof-of-Concept (PoC) for an Entrepreneurship curriculum. It demonstrates how Large Language Models (LLMs) and intelligent local databases can help university students integrate into new cities, reduce loneliness, and establish study or social circles.
+
+The design and features of this MVP are directly shaped by student user interviews and a structured **Value Proposition Canvas (VPC)**.
 
 ---
 
-## 📌 Problem Statement
+## 📌 Problem Statement & Interview Insights
 
-Every year, millions of students move to new cities or countries for university. Many arrive knowing no one and experience a period of social isolation. They face key challenges:
-- **Fragmentation**: Relevant groups, clubs, and events are scattered across WhatsApp, Discord, Facebook groups, Meetup, and university websites.
-- **High Entry Barrier**: Reaching out to active circles can feel intimidating for newcomers, particularly international or first-semester students.
-- **Unstructured Search**: Students often do not know which clubs fit their specific goals (e.g., meeting close friends vs. professional networking).
+Every year, millions of students move to new cities or countries for university. Many arrive knowing no one and experience a period of social isolation. Through our user interviews, we discovered:
+- 📸 **Social Channels**: Students mostly coordinate social events via Instagram and WhatsApp.
+- 🗺️ **Fragmentation**: Finding events is highly fragmented across many platforms.
+- 😔 **First-Month Loneliness**: Many students feel lonely during their first few months in a new city.
+- 🛹 **Shared Hobbies**: Having shared hobbies makes meeting people much easier.
+- 🛡️ **Profile Trust**: Students highly value verified profiles to increase trust.
+- ⚡ **Spontaneity**: Students actively seek spontaneous, low-pressure activities.
 
 ---
 
 ## 💡 The Solution: BuddyUp AI
 
-BuddyUp AI simplifies community discovery by offering:
-1. **Unified Preferences**: A clean profile builder capturing the student's city, academic status, goals, preferred group size, and personal interests.
-2. **Deterministic Matching Engine**: Scores local student communities (`communities.json`) using overlap between student preferences and community properties.
-3. **AI-Powered Explanations**: Custom matching justifications telling the student *why* a group fits them.
-4. **Instant Icebreakers**: Custom copy-pasteable messages to make starting the conversation effortless.
+BuddyUp AI addresses these findings by offering:
+1. **Rich Preference Profiling**: Captures not just interests and goals, but also the student's **Current Situation** (e.g. looking for study partners vs. new in the city), **Preferred Activity Style** (e.g. coffee, sports, gaming), and **Personality Type** (Introverted, Balanced, Extroverted).
+2. **Deterministic Matching Engine**: Evaluates a local database of 25 student communities (`communities.json`) using overlap between student preferences, personality styles, and community size parameters.
+3. **Structured AI Recommendations**: Instead of generic listings, BuddyUp generates a structured 3-card roadmap:
+   - 🥇 **Best Community**: The top student association or club fit.
+   - ⚡ **Best Activity**: A concrete, action-oriented event tailored to the preferred activity style.
+   - 👥 **Best Type of People to Meet**: A descriptor of the ideal peer profile compatibility.
+4. **Verified Community Badge**: Displays a trust shield (🛡️) simulating verification, addressing the safety and trust needs uncovered in interviews.
 
 ---
 
@@ -31,20 +39,20 @@ BuddyUp AI utilizes a lightweight **Retrieval-Augmented Generation (RAG)** conce
 
 ```
 [Student Profile Form] 
-       │
+       │ (Situation, Activity, Personality)
        ▼
-[matcher.py (Scoring Engine)] ───> Filters ───> [communities.json (Database)]
+[matcher.py (Scoring Engine)] ───> Filters ───> [communities.json (25 Database)]
        │
-       ▼ (Top 3 Communities)
+       ▼ (Sorted matching results)
 [llm.py (Gemini API or Mock AI)]
        │
-       ▼ (Generates Contextual Explanations & Icebreakers)
+       ▼ (Generates: Best Community, Best Activity, Best Peer Profile)
 [Streamlit UI Display]
 ```
 
-1. **Information Retrieval (IR)**: A heuristic scoring algorithm evaluates the student profile against the local database (`communities.json`) and sorts by relevance.
-2. **Context Synthesis**: The top 3 matching communities and the student profile are fed into the LLM system.
-3. **Structured Generation**: The LLM analyzes the data and produces personalized feedback and icebreakers. If the API key is missing or fails, a rule-based generative template engine (**Mock AI Mode**) takes over automatically to ensure instant demonstration capability.
+1. **Information Retrieval (IR)**: A heuristic scoring algorithm evaluates the student profile against the database of 25 local communities.
+2. **Context Synthesis**: The top matching communities and the student profile are fed into the LLM system.
+3. **Roadmap Generation**: The LLM analyzes the data and produces three distinct recommendation cards with personalized explanations, copyable icebreakers, and proposed meeting plans. If the API key is missing, the system uses a local template engine (**Mock AI Mode**) to guarantee instant, zero-setup pitch presentations.
 
 ---
 
@@ -59,7 +67,7 @@ BuddyUp AI utilizes a lightweight **Retrieval-Augmented Generation (RAG)** conce
 
 ### Running Locally
 
-1. **Clone or Navigate to the Directory**:
+1. **Navigate to the Directory**:
    ```bash
    cd buddyup
    ```
@@ -95,12 +103,10 @@ You can containerize and run BuddyUp AI in seconds using Docker:
 ---
 
 ## 🔮 Future Work
-
-For a full-scale product implementation, the next steps include:
-- **Vector Database**: Storing and searching communities using dense embeddings (e.g., ChromaDB, Pinecone) instead of key-value matches.
-- **Dynamic Scrapers**: Automating the ingestion of university club listings, Discord links, and local meetup channels.
-- **Student Verification**: Secure sign-in restricted to university email domains (`.edu`, `.ac.uk`, etc.).
-- **Inter-Student Matching**: Expanding matching to connect students with each other directly for coffee chats or project collaboration, in addition to matching them with communities.
+- **Vector Database**: Storing and searching communities using dense embeddings (e.g., ChromaDB, Pinecone).
+- **Dynamic Scrapers**: Ingesting university club listings and active Discord server directories.
+- **Identity Verification**: Restricting community postings to university email domains (`.edu`).
+- **Student-to-Student Matching**: Supporting secure one-on-one matches for peer coffee chats or homework study duos.
 
 ---
 

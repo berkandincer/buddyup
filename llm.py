@@ -11,144 +11,257 @@ logger = logging.getLogger("BuddyUp-LLM")
 def generate_mock_recommendations(student_profile: Dict[str, Any], matched_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Generates realistic, natural-sounding AI matching responses locally.
-    Simulates LLM output with custom text generation tailored to the user profile.
+    Produces exactly three cards:
+    1. Best Community (matching the top community from matcher)
+    2. Best Activity (an action-oriented event tailored to preferred_activity)
+    3. Best Type of People to Meet (tailored to personality and goals)
     """
     city = student_profile.get("university_city", "your university")
     student_type = student_profile.get("student_type", "student")
-    primary_goal = student_profile.get("primary_goal", "Make Friends").lower()
-    group_size = student_profile.get("preferred_group_size", "Medium").lower()
+    primary_goal = student_profile.get("primary_goal", "Make Friends")
+    group_size = student_profile.get("preferred_group_size", "Medium")
     interests = student_profile.get("interests", ["Socializing"])
-    
+    situations = student_profile.get("current_situations", ["New in the city"])
+    pref_activity = student_profile.get("preferred_activity", "Coffee")
+    personality = student_profile.get("personality", "Balanced")
+
+    # Helper text variables
     interests_phrase = ", ".join(interests[:-1]) + (" and " + interests[-1] if len(interests) > 1 else interests[0]) if interests else "student activities"
     first_interest = interests[0] if interests else "extracurriculars"
-    
-    recommendations = []
-    
-    # Generic templates for fallback, but we will specialize based on categories below
-    for item in matched_results:
-        comm = item["community"]
-        score = item["match_score"]
-        name = comm["name"]
-        category = comm["category"]
-        desc = comm["description"]
-        tags = comm["tags"]
-        
-        # 1. Custom 'Why it fits' generation based on student goal and student type
-        why_fits_templates = [
-            f"As an {student_type} adapting to {city}, you highlighted a desire to {primary_goal}. '{name}' is a stellar match because it offers a {group_size}-sized ecosystem built around {category}. It brings together peers sharing interests in {interests_phrase}, allowing you to bypass typical social friction and build connections in a structured, friendly environment.",
-            
-            f"You mentioned your main objective is to {primary_goal} while studying in {city}. Since you are interested in {first_interest}, '{name}' provides the exact community you need. The group's size and focus are ideal for {student_type}s looking to settle in quickly and engage in meaningful shared activities.",
-            
-            f"'{name}' naturally aligns with your profile as a {student_type}. It directly addresses your goal to {primary_goal} by hosting active gatherings themed around {category}. The community is highly welcoming to newcomers in {city} who share your enthusiasm for {interests_phrase}."
-        ]
-        why_fits = random.choice(why_fits_templates)
-        
-        # Customize 'Why it fits' depending on specific goals/types to make it feel extremely human
-        if "german" in primary_goal:
-            why_fits = f"Since your main goal is to practice German, '{name}' is an ideal fit. It creates a low-pressure environment for a {student_type} in {city} to speak the language in real-life contexts. Engaging with this group will help you build conversational confidence rapidly while sharing your interests in {first_interest}."
-        elif "loneliness" in primary_goal:
-            why_fits = f"Moving to a new city can be isolating, but joining a {group_size}-sized community like '{name}' is one of the fastest ways to reduce loneliness. Because they focus on active participation in {category}, you will find welcoming student peers who share your passion for {first_interest}, helping you build a support network in {city}."
-        elif "network" in primary_goal:
-            why_fits = f"For a {student_type} looking to build a professional network, '{name}' represents a key hub in the local student ecosystem. It connects you with career-minded individuals and events in the field of {category}, offering outstanding opportunities to exchange ideas and gain early mentorship in {city}."
+    situations_phrase = ", ".join([s.lower() for s in situations])
 
-        # 2. Custom Icebreaker generation based on category/interests
-        icebreaker = f"Hi everyone! I just moved to {city} as a {student_type} and would love to join your next meetup. I'm really interested in {first_interest}—hope to chat soon!"
+    recommendations = []
+
+    # ----------------------------------------------------
+    # CARD 1: BEST COMMUNITY
+    # ----------------------------------------------------
+    top_comm_item = matched_results[0] if matched_results else {
+        "community": {
+            "name": "Erasmus & International Meetup",
+            "category": "Volunteering",
+            "description": "Social gatherings and tours.",
+            "tags": ["International", "Social"]
+        },
+        "match_score": 90
+    }
+    
+    comm = top_comm_item["community"]
+    comm_score = top_comm_item["match_score"]
+    
+    why_fits_comm = (
+        f"You indicated that you are {situations_phrase}, identify as {personality.lower()}, and want to {primary_goal.lower()}. "
+        f"The '{comm['name']}' fits you perfectly as it specializes in {comm['category'].lower()}. "
+        f"It provides a structured environment where you can connect with students sharing your interests in {interests_phrase}."
+    )
+    
+    # Custom icebreaker for community
+    comm_icebreaker = f"Hi everyone! I just moved to {city} and saw this group. I'm really interested in {first_interest}. Are there any events coming up this week?"
+    comm_category = comm["category"].lower()
+    if "study" in comm_category:
+        comm_icebreaker = "Hey study partners! I'm looking to work on some course materials and prepare for exams. Anyone up for a study session at the library this week?"
+    elif "sports" in comm_category or "hiking" in comm_category:
+        comm_icebreaker = f"Hey! I'm a {student_type} and love staying active. I'd love to join the next session/run of '{comm['name']}'. What skill level is it?"
+    
+    recommendations.append({
+        "recommendation_type": "Best Community",
+        "name": comm["name"],
+        "match_score": comm_score,
+        "why_it_fits": why_fits_comm,
+        "suggested_icebreaker": comm_icebreaker,
+        "suggested_meeting": f"Meet outside the main campus building 10 minutes before their next session.",
+        "tags": comm["tags"]
+    })
+
+    # ----------------------------------------------------
+    # CARD 2: BEST ACTIVITY
+    # ----------------------------------------------------
+    # Search database for a community matching preferred_activity, otherwise pick the second match
+    activity_comm = None
+    for item in matched_results[1:]:
+        comm_cat = item["community"]["category"].lower()
+        if pref_activity.lower() in comm_cat or any(pref_activity.lower() in t.lower() for t in item["community"]["tags"]):
+            activity_comm = item
+            break
+    if not activity_comm and len(matched_results) > 1:
+        activity_comm = matched_results[1]
+    elif not activity_comm:
+        activity_comm = top_comm_item
         
-        category_lower = category.lower()
-        if "sport" in category_lower:
-            icebreaker = f"Hi! I'm a {student_type} in {city} and I'm really keen to join the next session of '{name}'. What skill levels do you usually play at, and do I need to bring any specific gear? Looking forward to meeting you guys!"
-        elif "game" in category_lower or "gaming" in category_lower:
-            icebreaker = f"Hey players! I just saw '{name}' online and love gaming. I'm new in town and would love to drop by for the next session. What games or platforms are you currently focusing on? Count me in!"
-        elif "tech" in category_lower or "ai" in category_lower:
-            icebreaker = f"Hi there! I'm a {student_type} interested in technology and AI. I'd love to join the next workshop or hackathon hosted by '{name}'. Is there a Discord server or group chat I can join to keep up with projects?"
-        elif "language" in category_lower:
-            icebreaker = f"Hallo! I'm an international student here in {city} looking to practice my German. Is '{name}' open to beginners? I'd love to drop by, practice conversational skills, and grab a coffee together!"
-        elif "cook" in category_lower:
-            icebreaker = f"Hi everyone! I love cooking and discovering new recipes. I'm new to the university and would love to attend the next kitchen meetup or workshop. What country's cuisine are we exploring next?"
-        elif "hike" in category_lower or "outdoor" in category_lower:
-            icebreaker = f"Hey hikers! I'm a {student_type} looking to explore the trails around {city}. I'd love to tag along on your next weekend hiking trip. How strenuous is the route, and what gear would you recommend bringing?"
-        elif "volunteer" in category_lower:
-            icebreaker = f"Hi! I'm looking to get involved in local volunteering while studying here. The sustainability work you do at '{name}' sounds amazing. How can I sign up for the next session?"
-        elif "music" in category_lower:
-            icebreaker = f"Hey everyone! I play a bit of instrument and would love to join the next session. What kind of music do you usually cover or jam to? Can't wait to play together!"
-        elif "startup" in category_lower:
-            icebreaker = f"Hi team! I'm a {student_type} looking to get plugged into the local startup scene here in {city}. I'm excited to attend the next pitch event or networking evening. Who should I contact to get started?"
-            
-        recommendations.append({
-            "name": name,
-            "match_score": score,
-            "why_it_fits": why_fits,
-            "suggested_icebreaker": icebreaker,
-            "tags": tags
-        })
-        
+    act_comm_data = activity_comm["community"]
+    act_score = min(98, activity_comm["match_score"] + 2) # activities feel more direct, boost score slightly
+    
+    # Map preferred activity to dynamic activity titles
+    activity_titles = {
+        "coffee": "Informal Café Coffee Chat",
+        "sports": f"Friendly {act_comm_data['name']} Match",
+        "study session": "Collaborative Library Study Sprint",
+        "gaming": f"Weekly {act_comm_data['name']} Session",
+        "hiking": "Weekend Trail Exploration Hike",
+        "language exchange": "Intercultural Language Café Session",
+        "networking event": "Pitch Night & Professional Networking Mixer"
+    }
+    
+    activity_title = activity_titles.get(pref_activity.lower(), f"Spontaneous {act_comm_data['name']} Gathering")
+    
+    why_fits_act = (
+        f"Since your preferred activity style is a {pref_activity.lower()} and you want to {primary_goal.lower()}, "
+        f"participating in this event is a highly effective step. It features a {act_comm_data['target_group_size'].lower()} group setting "
+        f"which aligns with your {personality.lower()} personality, making interactions feel natural and low-pressure."
+    )
+    
+    act_icebreaker = f"Hi! I see you are organizing the next {pref_activity.lower()} meetup for {act_comm_data['name']}. I'd love to tag along. Is there space for one more?"
+    if pref_activity.lower() == "coffee":
+        act_icebreaker = f"Hi there! I'm new in the city and looking to meet students for a coffee. Anyone free to check out that new café near the campus library tomorrow?"
+    
+    recommendations.append({
+        "recommendation_type": "Best Activity",
+        "name": activity_title,
+        "match_score": act_score,
+        "why_it_fits": why_fits_act,
+        "suggested_icebreaker": act_icebreaker,
+        "suggested_meeting": f"Meet at a central student café or the library foyer before heading over together.",
+        "tags": [pref_activity, act_comm_data["category"], "Spontaneous"]
+    })
+
+    # ----------------------------------------------------
+    # CARD 3: BEST TYPE OF PEOPLE TO MEET
+    # ----------------------------------------------------
+    # Determine peer profile names based on personality and goals
+    peer_title = "Friendly Explorer Students"
+    peer_tags = ["Open-minded", "Student-focused"]
+    
+    if personality.lower() == "introverted":
+        if "study" in situations_phrase or "network" in primary_goal.lower():
+            peer_title = "Focused & Analytical Tech Peers"
+            peer_tags = ["Thoughtful", "Goal-oriented", "Quiet Co-working"]
+            why_fits_peer = (
+                f"As an introverted student looking to {primary_goal.lower()}, you will find comfort and productivity "
+                f"among career-driven, tech-minded peers. They prefer small study sessions and deep topic discussions, "
+                f"allowing you to build trust and professional connections without social burnout."
+            )
+        else:
+            peer_title = "Cozy Gamers & Creative Minds"
+            peer_tags = ["Cozy", "Creative", "Low-pressure"]
+            why_fits_peer = (
+                f"Since you identify as introverted and enjoy {first_interest.lower()}, you would thrive by connecting "
+                f"with students who enjoy relaxed, small-scale activities like board games, cooking, or reading. "
+                f"This peer group values deeper, one-on-one relationships over loud group settings."
+            )
+    elif personality.lower() == "extroverted":
+        if "sports" in [i.lower() for i in interests] or pref_activity.lower() == "sports":
+            peer_title = "High-Energy Sports & Outdoor Enthusiasts"
+            peer_tags = ["Active", "Outgoing", "Fitness-focused"]
+            why_fits_peer = (
+                f"Being extroverted and interested in sports, you match best with high-energy students who love "
+                f"outdoor activities and spontaneous matches. They are outgoing, easy to approach on the field, "
+                f"and constantly organizing group outings in the city."
+            )
+        else:
+            peer_title = "Social Event Organizers & Networkers"
+            peer_tags = ["Extroverted", "Expressive", "Well-connected"]
+            why_fits_peer = (
+                f"Your outgoing nature and goal to {primary_goal.lower()} mean you will synergize perfectly with "
+                f"highly social students, event hosts, and student representatives. They can introduce you "
+                f"to multiple circles quickly and get you plugged into the local student culture."
+            )
+    else: # Balanced
+        peer_title = "Multilingual Culturally-Curious Explorers"
+        peer_tags = ["Intercultural", "Adaptable", "English Friendly"]
+        why_fits_peer = (
+            f"With a balanced personality, you fit well with international and Erasmus students who are also "
+            f"new to the city. They are open, adaptable, and eager to try different activities, "
+            f"whether it's a quick coffee, a study session, or exploring the city together."
+        )
+
+    peer_icebreaker = f"Hey! I saw your post in the student channel. I'm also studying here and interested in {first_interest.lower()}. Would you be down to grab lunch at the canteen sometime this week?"
+    
+    recommendations.append({
+        "recommendation_type": "Best Type of People to Meet",
+        "name": peer_title,
+        "match_score": 92,
+        "why_it_fits": why_fits_peer,
+        "suggested_icebreaker": peer_icebreaker,
+        "suggested_meeting": "Arrange a casual lunch or a coffee catchup at the university canteen.",
+        "tags": peer_tags
+    })
+
     return recommendations
 
 
 def generate_gemini_recommendations(student_profile: Dict[str, Any], matched_results: List[Dict[str, Any]], api_key: str) -> List[Dict[str, Any]]:
     """
-    Queries the Gemini API to get highly personalized recommendations based on the student's profile
-    and the top 3 communities retrieved by the matching engine.
+    Queries the Gemini API to get three personalized cards: Best Community, Best Activity, and Best Type of People to Meet.
     """
     if not api_key:
         logger.warning("No API key provided for Gemini. Falling back to Mock AI.")
         return generate_mock_recommendations(student_profile, matched_results)
 
     try:
-        # Configure the Google Generative AI library
+        # Configure Gemini SDK
         genai.configure(api_key=api_key)
-        
-        # We will use gemini-1.5-flash which is fast, cheap and highly capable
         model = genai.GenerativeModel("gemini-1.5-flash")
         
-        # Convert matched communities structure for prompt
-        communities_prompt_info = []
-        for item in matched_results:
+        # Take top communities to feed into the prompt context
+        top_comms_context = []
+        for item in matched_results[:5]: # Send top 5 to give Gemini enough context to choose
             comm = item["community"]
             score = item["match_score"]
-            communities_prompt_info.append({
+            top_comms_context.append({
                 "name": comm["name"],
                 "category": comm["category"],
                 "description": comm["description"],
                 "tags": comm["tags"],
                 "match_score": score
             })
-            
+
         prompt = f"""
 You are an expert student integration assistant and community matcher.
-Your goal is to help a newly arrived student feel welcomed and find their community.
+Your goal is to help a student who has recently moved or is struggling to build social circles.
 
 We have a student profile:
 - University/City: {student_profile.get('university_city')}
 - Student Type: {student_profile.get('student_type')}
+- Current Situations: {", ".join(student_profile.get('current_situations', []))}
 - Primary Goal: {student_profile.get('primary_goal')}
-- Preferred Group Size: {student_profile.get('preferred_group_size')}
+- Preferred Activity Style: {student_profile.get('preferred_activity')}
+- Personality Type: {student_profile.get('personality')}
 - Interests: {", ".join(student_profile.get('interests', []))}
 
-We have retrieved the top 3 matching communities from our database:
-{json.dumps(communities_prompt_info, indent=2)}
+We have retrieved the top matching student communities from our database:
+{json.dumps(top_comms_context, indent=2)}
 
-For each of these 3 communities, please write:
-1. "why_it_fits": A highly personalized explanation of why this community is a great match for this specific student, addressing their student type, goals, city, and interests. Write 2-3 sentences. Make it sound warm, professional, encouraging, and intelligent.
-2. "suggested_icebreaker": A ready-to-copy, friendly icebreaker message the student can send to this community's group chat or organizer. Tailor it to the community's theme and the student's background. Include a placeholder or keep it simple.
+Please generate exactly 3 recommendations of different types:
+1. "Best Community": Select the single best matching community from the retrieved list. Use the community name as the name.
+2. "Best Activity": A specific action-oriented event or gathering related to their preferred activity style (e.g. "Library Study Sprint" for Study, "Sunday Alpine hike" for hiking, "Canteen Coffee meetup"). Make it sound exciting and tailored to their personality.
+3. "Best Type of People to Meet": A description of the ideal peer profile they should look for (e.g. "Quiet tech-minded creators", "Extroverted outdoor adventurers", "Culturally curious international explorers").
 
-Return your response strictly as a valid JSON array of 3 elements with the exact keys: "name", "match_score", "why_it_fits", "suggested_icebreaker", "tags".
-Ensure the "match_score" corresponds to the score provided in the input, and the "tags" corresponds to the tags in the input.
+For each of the 3 recommendations, provide:
+- "recommendation_type": Must be exactly "Best Community", "Best Activity", or "Best Type of People to Meet".
+- "name": The title of this recommendation.
+- "match_score": An integer (0-100) representing how well this fits the profile. For "Best Community", use its score from the matched list.
+- "why_it_fits": A highly personalized 2-3 sentence explanation explaining why this fits their personality, current situation, and goals.
+- "suggested_icebreaker": A copyable ready-to-send message they can use to initiate contact.
+- "suggested_meeting": A short suggestion on where or how they should meet (e.g., "Grab coffee after the event", "Meet at the university gate").
+- "tags": A list of 3 relevant tags.
+
+Return your response strictly as a valid JSON array of 3 elements with keys: "recommendation_type", "name", "match_score", "why_it_fits", "suggested_icebreaker", "suggested_meeting", "tags".
+Ensure there are no markdown blocks or backticks in the raw API response other than the JSON itself.
 
 Example JSON output structure:
 [
   {{
-    "name": "Community Name",
-    "match_score": 95,
-    "why_it_fits": "Personalized explanation here...",
-    "suggested_icebreaker": "Hi! I am...",
-    "tags": ["Tag1", "Tag2"]
-  }}
+    "recommendation_type": "Best Community",
+    "name": "TUM Math & CS Study Group",
+    "match_score": 92,
+    "why_it_fits": "Since you are looking for study partners and identify as introverted...",
+    "suggested_icebreaker": "Hi! I saw your study group...",
+    "suggested_meeting": "Meet at the main library lobby.",
+    "tags": ["Study Session", "Coding", "Mathematics"]
+  }},
+  ...
 ]
 """
         
-        # Set configuration for JSON output if supported, else query normally
-        # In newer versions of the SDK, you can pass response_mime_type
         response = model.generate_content(
             prompt,
             generation_config=genai.GenerationConfig(
@@ -157,7 +270,6 @@ Example JSON output structure:
             )
         )
         
-        # Clean response text in case markdown block surrounds it
         response_text = response.text.strip()
         if response_text.startswith("```json"):
             response_text = response_text[7:]
@@ -167,30 +279,21 @@ Example JSON output structure:
         
         parsed_data = json.loads(response_text)
         
-        # Validate elements have the correct keys, fallback if parsing is malformed
+        # Verify schema elements and return
         validated_data = []
-        for idx, item in enumerate(parsed_data):
-            # Check if fields exist, otherwise pull from original matched results
-            name = item.get("name", matched_results[idx]["community"]["name"])
-            score = item.get("match_score", matched_results[idx]["match_score"])
-            why_fits = item.get("why_it_fits", "")
-            icebreaker = item.get("suggested_icebreaker", "")
-            tags = item.get("tags", matched_results[idx]["community"]["tags"])
-            
-            if not why_fits or not icebreaker:
-                # If fields are empty, raise error to trigger fallback
-                raise ValueError("Incomplete fields returned by Gemini API")
-                
+        for item in parsed_data:
             validated_data.append({
-                "name": name,
-                "match_score": int(score),
-                "why_it_fits": why_fits,
-                "suggested_icebreaker": icebreaker,
-                "tags": tags
+                "recommendation_type": item.get("recommendation_type", "Best Community"),
+                "name": item.get("name", "Student Meetup"),
+                "match_score": int(item.get("match_score", 85)),
+                "why_it_fits": item.get("why_it_fits", "Matches your interests."),
+                "suggested_icebreaker": item.get("suggested_icebreaker", "Hello!"),
+                "suggested_meeting": item.get("suggested_meeting", "Meet on campus."),
+                "tags": item.get("tags", ["Student", "Social"])
             })
             
         return validated_data
         
     except Exception as e:
-        logger.error(f"Gemini API matching failed: {str(e)}. Falling back to Mock AI.")
+        logger.error(f"Gemini API query failed: {str(e)}. Falling back to Mock AI.")
         return generate_mock_recommendations(student_profile, matched_results)
